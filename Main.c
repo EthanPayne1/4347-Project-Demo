@@ -1,8 +1,7 @@
 #include <stdatomic.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "/opt/homebrew/Cellar/libpq/17.2/include/libpq-fe.h"
-
+#include "/opt/homebrew/include/libpq-fe.h"
 // PGconn encapsulated a connection to the backend 
 // PGresult encapsulates the result of a single SQL command (Query) -- A Query string given to PQsendQuery can conain multiple commands and thus return multiple PGresult objects)
 // PGfinish closes the current connection and frees the PG conn data structure
@@ -16,36 +15,41 @@ void check_query(PGresult *results, PGconn *connection) {
   }
 }
 
-int main() {  
-  const char *connection_info = "dbname=dted_db user=systemUser password=systemPassword host=localhost";
-  PGconn *connection = PQconnectdb(connection_info);
-  
+void query_database() {
+  const char *connection_info = "dbname=dted_db user=ethan host=localhost";
+  PGconn* connection = PQconnectdb(connection_info);
+  PGresult* res;
   if (PQstatus(connection) != CONNECTION_OK) {
-    // Print error
+    printf(stderr, "Line 24: Failed to create connection: %s\n", PQerrorMessage(connection));
+    exit(1);
   }
+
+  // Would rather not hardcode these vaules
   double lon = -122.42;
   double lat = 37.77;
 
   char query[512];
   snprintf(query, sizeof(query),
-           "SELECT ST_VALUE(rast, ST_SRID(ST_Point(%f, $f), 4326))"
+           "SELECT ST_VALUE(rast, ST_SRID(ST_Point(%f, %f), 4326))"
            "FROM dted_table "
-           "WHERE ST_Intersects(rast, ST_SetSRID(ST_Point(%f, %f), -4326));",
+           "WHERE ST_Intersects(rast, ST_SetSRID(ST_Point(%f, %f) -4326));",
            lon, lat, lon, lat);
+ 
+  PGresult PGexec();
+  check_query(res, connection);
 
-  // Error: Incompatible integer to pointer conversion passing 'int' to type const PGresults * 
-  PGresult *results = PGexec(connection, query);
-  check_query(results, connection);
-
-  if (PQntuples(results) > 0) {
-    printf("Elevation: %s meters\n", PGgetvalue(results, 0, 0));
+  if (PQntuples(res) > 0) {
+    printf("Elevation: %s meters\n", PQgetvalue(res, 0, 0));
   }
   else {
-    printf("No elevation data found at this location. \n"); // Not possible but checking
+    printf("No elevation data found at this location. \n"); // Not possible but need to check
+    exit(1);
   }
+  
+}
 
-  // Error: call to undeclared function
-  PGclear(results);
-  PQfinish(connection);
+int main() {  
+  query_database();
+
   return 0;
 }
