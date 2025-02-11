@@ -1,0 +1,6 @@
+build/
+*.json
+*.qgz
+*.sql
+metadata*
+bin/
