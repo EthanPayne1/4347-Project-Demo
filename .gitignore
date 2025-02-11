@@ -1,4 +1,6 @@
 build/
-compile_commands*
-dted_backup.sql
-
+*.json
+*.qgz
+*.sql
+metadata*
+bin/

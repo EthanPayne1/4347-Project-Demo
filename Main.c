@@ -7,7 +7,7 @@
 // PGfinish closes the current connection and frees the PG conn data structure
 void check_query(PGresult *results, PGconn *connection) {
   // Error: Incompatible integer to pointer conversion passing 'int' to type const PGresults
-  if (PQresultStatus((results) != PGRES_TUPLES_OK)) {
+  if (PQresultStatus(results) != PGRES_TUPLES_OK) {
     fprintf(stderr, "Line 7: Failed to Query: %s\n", PQerrorMessage(connection));
     PQclear(results);
     PQfinish(connection);
