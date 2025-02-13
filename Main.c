@@ -14,8 +14,8 @@ void check_query(PGresult *results, PGconn *connection) {
   }
 }
 
-void query_database() {
-  const char *connection_info = "dbname=dted_db user=ethan host=localhost";
+void query_database(double lon, double lat) {
+  const char *connection_info = "dbname=dted_database user=ethan host=localhost";
   PGconn* connection = PQconnectdb(connection_info);
   PGresult* res;
   if (PQstatus(connection) != CONNECTION_OK) {
@@ -24,14 +24,10 @@ void query_database() {
     exit(1);
   }
 
-  // Would rather not hardcode these values
-  double lon = -122.42;
-  double lat = 37.77;
-
   char query[512];
   snprintf(query, sizeof(query),
-           "SELECT ST_VALUE(rast, ST_SRID(ST_Point(%f, %f), 4326))"
-           "FROM dted_table "
+           "SELECT ST_VALUE(rast, ST_SetSRID(ST_Point(%f, %f), 4326))"
+           "FROM dted_table2 "
            "WHERE ST_Intersects(rast, ST_SetSRID(ST_Point(%f, %f), 4326));",
            lon, lat, lon, lat);
  
@@ -49,7 +45,13 @@ void query_database() {
   PQfinish(connection);
 }
 
-int main() {  
-  query_database();
+int main() {
+  // Would rather not hardcode these values
+  // double lon = -113.848;
+  // double lat = 48.9249;
+  double lon = -144.172;
+  double lat = 48.944;
+
+  query_database(lon, lat);
   return 0;
 }
