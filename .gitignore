@@ -4,3 +4,4 @@ build/
 *.sql
 metadata*
 bin/
+*.dump
