@@ -15,6 +15,11 @@
 ### 5. Concert DTED to PostGIS format using raster2pgsql to load DTED files into DB
 ```$ raster2pgsql -s 4326 -I -C -M /path/to/dted/DTED/DTED1/DTED/DTED1/ /path/to/dted/DTED/DTED1/DTED/DTED1/ | psql -d <database> -U <user>```
 
+## New
+6. Run the script to download the database dump:
+   ```sh
+   chmod +x download_db.sh
+   script/install.sh
 
 # Project Idea
 1. Create a web application that allows users to view and query DTED data. The application will display a map with the DTED data overlaid on top of it. The user will be able to click on the map to get the elevation at that point. The user will also be able to draw a line on the map and get the elevation profile along that line.
