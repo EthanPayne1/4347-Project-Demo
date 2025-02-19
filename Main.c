@@ -74,6 +74,6 @@ int main() {
   //double lon = -118.466;
   //double lat = 48.7026;
 
-  query_database(lon, lat);
+  query_database(lon_118, lat_118);
   return 0;
 }
