@@ -15,6 +15,7 @@ void check_query(PGresult *results, PGconn *connection) {
 }
 
 void query_database(double lon, double lat) {
+   
   const char *connection_info = "dbname=dted_database user=ethan host=localhost";
   PGconn* connection = PQconnectdb(connection_info);
   PGresult* res;
